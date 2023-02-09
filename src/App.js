@@ -1,4 +1,5 @@
 import React, {useState} from 'react';
+// import ClassCounter from './components/ClassesCounter';
 import Counter from './components/Counter';
 
 function App() {
@@ -14,9 +15,20 @@ function App() {
 
     return (
       <div className="App">
-        <Counter/>        
-        <Counter/>
-        <Counter/>
+        <div className='post'>
+          <div className='post_content'>
+            <strong>1. Javascript</strong>
+            <div>
+              Javascript - язык программирования
+            </div>
+          </div>
+          <div className='post_btns'>
+            <button>Удалить</button>
+
+          </div>
+
+
+        </div>
         <Counter/>
 
       </div>           
