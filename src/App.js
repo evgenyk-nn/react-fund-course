@@ -13,13 +13,15 @@ import MyModal from './components/UI/MyModal/MyModal';
 import { useSortedPosts } from './hooks/usePosts';
 import axios from 'axios';
 import PostService from './API/PosrService';
+import Loader from './components/UI/Loader/Loader';
 
 
 function App() {
   const [posts, setPosts] = useState([])  
   const [filter, setfilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false);
-  const sortedAndSearchedPosts = useSortedPosts(posts, filter.sort, filter.query)
+  const sortedAndSearchedPosts = useSortedPosts(posts, filter.sort, filter.query);
+  const [isPostLoading, setIsPostLoading] = useState(false);
 
   useEffect(() => {
     // console.log('USE EFFECT')
@@ -32,9 +34,15 @@ function App() {
   }
 
   async function fetchPosts() {
+    setIsPostLoading(true);
+    setTimeout(() => {
+      // console.log(response.data)
+      setPosts(posts)
+      setIsPostLoading(false);
+    }, 1000)
+
     const posts = await PostService.getAll(); 
-    // console.log(response.data)
-    setPosts(posts)
+    
   }
 
   // получение post из дочернего элемента
@@ -57,7 +65,10 @@ function App() {
         filter={filter}
         setFilter={setfilter}
       />  
-      <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список постов про JS"/>         
+      {isPostLoading
+        ? <div style={{display: 'flex', justifyContent: 'center', marginTop: 50}}><Loader/></div>
+        : <PostList remove={removePost} posts={sortedAndSearchedPosts} title="Список постов про JS"/>
+      }               
     </div>   
   );
 }
