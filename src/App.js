@@ -1,4 +1,4 @@
-import React, {useMemo, useRef, useState} from 'react';
+import React, {useEffect, useMemo, useRef, useState} from 'react';
 // import ClassCounter from './components/ClassesCounter';
 import './styles/App.css';
 import Counter from './components/Counter';
@@ -11,26 +11,29 @@ import MySelect from './components/UI/select/MySelect';
 import PostFilter from './components/PostFilter';
 import MyModal from './components/UI/MyModal/MyModal';
 import { useSortedPosts } from './hooks/usePosts';
+import axios from 'axios'
 
 
 function App() {
-  const [posts, setPosts] = useState([
-    {id:1, title: 'Javascript', body: 'Description'},
-    {id:2, title: 'Javascript-1', body: 'Description'},
-    {id:3, title: 'Javascript-2', body: 'Description'},
-  ])     
-  
+  const [posts, setPosts] = useState([])  
   const [filter, setfilter] = useState({sort: '', query: ''})
   const [modal, setModal] = useState(false);
-  const sortedAndSearchedPosts = useSortedPosts(posts, filter.sort, filter.query);
+  const sortedAndSearchedPosts = useSortedPosts(posts, filter.sort, filter.query)
 
-  
-
-
+  useEffect(() => {
+    // console.log('USE EFFECT')
+    fetchPosts()
+  }, [])
 
   const createPost = (newPost) => {
     setPosts([...posts, newPost])
     setModal(false)
+  }
+
+  async function fetchPosts() {
+    const response = await axios.get('https://jsonplaceholder.typicode.com/posts')
+    // console.log(response.data)
+    setPosts(response.data)
   }
 
   // получение post из дочернего элемента
@@ -40,6 +43,7 @@ function App() {
 
   return (
     <div className="App"> 
+      <button onClick={fetchPosts}>GET POSTS</button>
       <MyButton style={{marginTop: 25}} onClick={() => setModal(true)}>
         Создать пользователя       
       </MyButton>
